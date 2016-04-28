@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide;
 import com.zhuguohui.learn.StackLayout;
 
 /**
- * Created by yuelin on 2016/4/26.
+ * Created by zhuguohui on 2016/4/26.
  */
 public class ImageAdapter extends StackLayout.BaseAdapter{
     private int[] images; // 数据源
@@ -20,8 +20,6 @@ public class ImageAdapter extends StackLayout.BaseAdapter{
         this.context = context;
         this.images = images;
     }
-
-
     @Override
     public int getVisibleCount() {
         return 3;
@@ -29,7 +27,7 @@ public class ImageAdapter extends StackLayout.BaseAdapter{
 
     @Override
     public int getCount() {
-         return images.length;
+        return images.length;
     }
 
     @Override

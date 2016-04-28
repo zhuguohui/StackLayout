@@ -24,7 +24,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * Created by yuelin on 2016/4/26.
+ * Created by zhuguohui on 2016/4/26.
  */
 public class StackLayout extends ViewGroup implements  Observer {
 
@@ -77,7 +77,6 @@ public class StackLayout extends ViewGroup implements  Observer {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        Log.i("zgh", "onMeasure被调用");
         int childcount = getChildCount();
         for (int i = 0; i < childcount; i++) {
             //测量子view大小
@@ -87,14 +86,13 @@ public class StackLayout extends ViewGroup implements  Observer {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        Log.i("zgh", "onLayout 被调用");
+
         //从中心布局
         int mWidth = getWidth();
         int mHight = getHeight();
         int left = l + mWidth / 2;
         int top = t + mHight / 2;
         int childcount = getChildCount();
-
         mViewPositionList.clear();
         for (int i = 0; i < childcount; i++) {
             mViewPositionList.add(new Point(0, 0));
@@ -107,16 +105,12 @@ public class StackLayout extends ViewGroup implements  Observer {
             int childright = childLeft + childView.getMeasuredWidth();
             childView.layout(childLeft, childTop, childright, childbuttom);
             childView.setTranslationY(j * mOffsetY);
-            childView.setTranslationX(j*mOffsetX);
-            childView.setScaleX((float) (1 - j * mOffsetScale));
-            childView.setScaleY((float) (1 - j * mOffsetScale));
-
+            childView.setTranslationX(j * mOffsetX);
+            childView.setScaleX((1 - j * mOffsetScale));
+            childView.setScaleY((1 - j * mOffsetScale));
             //记录view的起始位置
             Point point = mViewPositionList.get(i);
             point.set(childLeft + childView.getMeasuredWidth() / 2, childTop + childView.getMeasuredHeight() / 2);
-            //设置监听
-
-
         }
     }
 
@@ -252,6 +246,12 @@ public class StackLayout extends ViewGroup implements  Observer {
 
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
+                        //此处使用的是offsetLeftAndRight，因为之前使用过setTranslationX发现
+                        //view的显示范围与通过view.getlerf()的范围不一致。造成了，手指触摸是获取
+                        //被触摸到的view不正确，因此才改用offsetLeftAndRight
+
+                        //还需要注意使用offsetLeftAndRight的时候设置的是偏移量，具有叠加的效果
+                        //所以此处不能直接使用animation.getAnimatedValue()
                         int offset = (int) animation.getAnimatedValue() - lastOffset;
                         outView.offsetLeftAndRight(offset);
                         lastOffset = (int) animation.getAnimatedValue();
@@ -274,8 +274,6 @@ public class StackLayout extends ViewGroup implements  Observer {
                         if (finalOut) {
                             //复用view
                             reuseView(outView);
-
-
                         } else {
                             updateViews(0);
                         }
@@ -294,6 +292,7 @@ public class StackLayout extends ViewGroup implements  Observer {
         //将移除的view插入到第一个，因为我们的layout是从最后开始显示的，所以第一个显示在最底层
         //此处不需要使用removeView和addView因为这两个方法会 调用 requestLayout()和invalidate(true);
         removeViewInLayout(outView);
+        //此处需要判断mAdapter是否为空，以防在不使用Adapter的情况下，也能正常显示
         if (mAdapter!=null&&mNextPosition <= mAdapter.getCount() - 1) {
             View view=mAdapter.getView(outView,mNextPosition, StackLayout.this);
             addViewInLayout(view, 0, view.getLayoutParams(), true);
@@ -326,22 +325,21 @@ public class StackLayout extends ViewGroup implements  Observer {
                 return;
             }
             Point point = mViewPositionList.get(mSelectIndex);
+            //偏移view实现拖动效果
             view.offsetTopAndBottom(dy);
             view.offsetLeftAndRight(dx);
             //计算新的中心的
             int centerx = view.getLeft() + view.getWidth() / 2;
             int centery = view.getTop() + view.getHeight() / 2;
-            //根据位移设置alph
-            //获取初始位置
-            //获取中心点
 
             //计算偏移量
             int x = centerx - point.x;
             int y = centery - point.y;
 
             int distance = (int) Math.sqrt(x * x + y * y);
-            //  Log.i("zgh", "distance=" + distance);
+            // 计算比率
             float rate = (float) (distance * 2.0 / view.getWidth());
+            //更新其他view
             updateViews(rate);
         }
     }
@@ -350,13 +348,14 @@ public class StackLayout extends ViewGroup implements  Observer {
         if (rate > 1) {
             rate = 1;
         }
-        //所以view向上移动
         int count = getChildCount();
         int j = 1;
+        //注意此处是从count-2开始循环，因为count-1为我们正在拖动的那个view
         for (int i = count - 2; i >= 0; i--, j++) {
             View view = getChildAt(i);
 
             float scaleX = (float) (1 - mOffsetScale * j);
+            //计算新的缩放值，算法与onlayout中的一样，只是多了一点。
             float newScale = (float) (scaleX + mOffsetScale * rate);
             view.setScaleY(newScale);
             view.setScaleX(newScale);
