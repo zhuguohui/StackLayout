@@ -110,3 +110,4 @@ apdater方式的布局文件：
             android:src="@drawable/image4" />
     </com.zhuguohui.learn.StackLayout>
 ```
+关于具体实现，请见[我的博客](http://blog.csdn.net/qq_22706515/article/details/51274598)
