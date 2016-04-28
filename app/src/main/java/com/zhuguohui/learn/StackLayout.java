@@ -502,8 +502,9 @@ public class StackLayout extends ViewGroup implements  Observer {
     /*************以下代码关于飞出的逻辑**********************/
 
     /**
-     * 从左边飞出
-     * @param up 如果为true表示从坐上放飞出，否则从左下飞出
+     * 自动飞出
+     * @param  left true表示从左边飞出，否则从右边
+     * @param up 如果为true表示从上边放飞出，否则从下边飞出
      */
     public void takeOff(boolean left,boolean up){
         if(getChildCount()!=0){

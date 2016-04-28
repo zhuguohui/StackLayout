@@ -8,29 +8,29 @@
 
     <com.zhuguohui.learn.StackLayout
         android:id="@+id/gallery"
-        app:offsetY="-20dp"
-        app:offsetX="-20dp"
-        app:offseetScale="5"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true">
+        android:layout_centerInParent="true"
+        app:offseetScale="5"
+        app:offsetX="-20dp"
+        app:offsetY="-20dp">
         <ImageView
-            android:src="@drawable/image1"
             android:layout_width="300dp"
-            android:layout_height="200dp" />
+            android:layout_height="200dp"
+            android:src="@drawable/image1" />
         <ImageView
-            android:src="@drawable/image2"
             android:layout_width="300dp"
-            android:layout_height="200dp" />
+            android:layout_height="200dp"
+            android:src="@drawable/image2" />
         <ImageView
-            android:src="@drawable/image3"
             android:layout_width="300dp"
-            android:layout_height="200dp" />
-        <ImageView
-            android:src="@drawable/image4"
-            android:layout_width="300dp"
-            android:layout_height="200dp" />
+            android:layout_height="200dp"
+            android:src="@drawable/image3" />
 
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:src="@drawable/image4" />
     </com.zhuguohui.learn.StackLayout>
     <LinearLayout
         android:id="@+id/ll_btns"

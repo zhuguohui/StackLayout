@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="StackLayout">
+        //Y轴方向的偏移量，负数向上偏移，正数向下偏移
         <attr name="offsetY" format="dimension"/>
+        //X轴方向的偏移量，负数向左偏移，正数向右偏移
         <attr name="offseetScale" format="integer"/>
+        //缩放比的偏移量，范围为0-100，
         <attr name="offsetX" format="dimension"/>
     </declare-styleable>
 </resources>
