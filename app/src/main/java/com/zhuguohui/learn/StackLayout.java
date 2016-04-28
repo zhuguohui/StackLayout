@@ -294,7 +294,7 @@ public class StackLayout extends ViewGroup implements  Observer {
         //将移除的view插入到第一个，因为我们的layout是从最后开始显示的，所以第一个显示在最底层
         //此处不需要使用removeView和addView因为这两个方法会 调用 requestLayout()和invalidate(true);
         removeViewInLayout(outView);
-        if (mNextPosition <= mAdapter.getCount() - 1) {
+        if (mAdapter!=null&&mNextPosition <= mAdapter.getCount() - 1) {
             View view=mAdapter.getView(outView,mNextPosition, StackLayout.this);
             addViewInLayout(view, 0, view.getLayoutParams(), true);
             mNextPosition++;
