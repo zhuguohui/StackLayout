@@ -2,7 +2,7 @@
 一个自定义层叠layout
 #一.效果
 
-1.层叠显示，通过xml属性可控制Y轴偏移量，X轴偏移量，缩放比例。
+###1.层叠显示，通过xml属性可控制Y轴偏移量，X轴偏移量，缩放比例。
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
@@ -17,11 +17,11 @@
 </resources>
 ```
 
-2.可拖动，自动复位。拖动时有动画效果。
+###2.可拖动，自动复位。拖动时有动画效果。
 
 ![这里写图片描述](http://img.blog.csdn.net/20160428150553361)
 
-3.支持通过调用函数的方式飞出，且方向可以自定义。
+###3.支持通过调用函数的方式飞出，且方向可以自定义。
 
 ```
 //函数声明
@@ -57,12 +57,15 @@
 
     }
 ```
-效果
+####效果
 
 ![这里写图片描述](http://img.blog.csdn.net/20160428151237940)
 
-4。支持以adapter的方式使用，也支持直接布局
-apdater方式的布局文件：
+###4.支持以adapter的方式使用，也支持直接布局
+
+####apdater方式
+
+布局文件：
 ```
     <com.zhuguohui.learn.StackLayout
         android:id="@+id/gallery"
@@ -75,12 +78,59 @@ apdater方式的布局文件：
     </com.zhuguohui.learn.StackLayout>
 ```
 代码：
+
+自定义的Adpater继承自StackLayout.BaseAdapter。
+```
+/**
+ * Created by zhuguohui on 2016/4/26.
+ */
+public class ImageAdapter extends StackLayout.BaseAdapter{
+    private int[] images; // 数据源
+    private Context context;
+
+    public ImageAdapter(Context context,int[] images) {
+        super();
+        this.context = context;
+        this.images = images;
+    }
+    //设置显示的数量
+    @Override
+    public int getVisibleCount() {
+        return 3;
+    }
+
+    @Override
+    public int getCount() {
+         return images.length;
+    }
+
+    @Override
+    public View getView(View view, int position, StackLayout parent) {
+        ImageView imageView;
+        if(view==null) {
+            imageView = new ImageView(context); 
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY); 
+            imageView.setLayoutParams(new Gallery.LayoutParams(500, 400));
+        }else {
+            imageView= (ImageView) view;
+
+        }
+        Glide.with(context).load(images[position]).into(imageView);
+        return imageView;
+    }
+}
+```
+设置给StackLayout
 ```
     gallery= (StackLayout) findViewById(R.id.gallery);
     adapter=new ImageAdapter(this,rid);
     gallery.setAdapter(adapter);
 ```
-直接布局方式
+效果
+
+![这里写图片描述](http://img.blog.csdn.net/20160428153510373)
+
+####直接布局方式
 
 ```
   <com.zhuguohui.learn.StackLayout
@@ -110,4 +160,6 @@ apdater方式的布局文件：
             android:src="@drawable/image4" />
     </com.zhuguohui.learn.StackLayout>
 ```
+效果就是最开始演示的效果，我就不放图了。
+
 关于具体实现，请见[我的博客](http://blog.csdn.net/qq_22706515/article/details/51274598)
